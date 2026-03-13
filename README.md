@@ -1,8 +1,16 @@
-# GigaChat Codex Skills
+# GigaChat Skills
 
-Portable Codex skills for writing code against the GigaChat ecosystem.
+Portable skill folders for AI coding agents that need to write code against the GigaChat ecosystem.
 
-This repository contains self-contained skill folders only:
+This repository is intentionally tool-agnostic. Different agent products expose reusable instructions in different ways:
+
+- some support repository or team-level `skills`
+- some rely on project instruction files
+- some use custom modes, prompts, or MCP-connected workflows
+
+This repository packages the GigaChat knowledge as self-contained skill folders so it can be adapted to any of those environments.
+
+## What is included
 
 - `gigachat-navigation`
 - `gigachat-setup`
@@ -12,65 +20,126 @@ This repository contains self-contained skill folders only:
 - `langchain-gigachat`
 - `gpt2giga`
 
-Each skill folder contains:
+Each folder contains:
 
-- `SKILL.md`
-- `references/` with detailed guidance loaded on demand
+- `SKILL.md` for trigger logic, workflow, and default behavior
+- `references/` for detailed guidance loaded on demand
 
-The skills are intentionally packaged without local verification scripts or workspace-specific state files. They are meant to be portable and usable by another agent as-is.
+The repository does not include local verification harnesses or workspace-specific state files. It is meant to ship the reusable instruction layer only.
 
-## Included Skills
+## Skills
 
 ### `gigachat-navigation`
 
-Use first when the user is not sure whether to choose the native SDK, LangChain integration, or the compatibility proxy.
+Choose the right integration layer:
+
+- native `gigachat` SDK
+- `langchain-gigachat`
+- `gpt2giga`
+
+Use this first when the agent should decide which path fits the task.
 
 ### `gigachat-setup`
 
-Use for credentials, scopes, TLS certificates, environment variables, and connectivity troubleshooting.
+Use for:
+
+- credentials
+- OAuth scope selection
+- TLS certificates
+- environment variables
+- connectivity troubleshooting
 
 ### `gigachat-sdk-chat`
 
-Use for direct Python integration with the official `gigachat` SDK for chat, streaming, tokens, and message history.
+Use for direct Python integration with the official `gigachat` SDK:
+
+- chat
+- streaming
+- message history
+- model selection
+- token counting
 
 ### `gigachat-sdk-functions`
 
-Use for native function calling and tool-use loops in the official SDK.
+Use for native tool and function calling with the official SDK:
+
+- function schemas
+- tool selection
+- second-turn tool result flow
+- built-in function caveats
 
 ### `gigachat-sdk-files-embeddings`
 
-Use for uploads, file-backed prompts, multimodal constraints, and direct embeddings.
+Use for:
+
+- file upload and lifecycle
+- file-backed prompts
+- multimodal constraints
+- direct embeddings
 
 ### `langchain-gigachat`
 
-Use for LangChain-based chat, tools, embeddings, and RAG with GigaChat.
+Use for LangChain-based work with GigaChat:
+
+- chat models
+- tools
+- structured output
+- embeddings
+- RAG
 
 ### `gpt2giga`
 
-Use when an app must keep an OpenAI-compatible or Anthropic-compatible client and talk to GigaChat through the `gpt2giga` proxy.
+Use when an existing client must keep an OpenAI-style or Anthropic-style API and talk to GigaChat through the compatibility proxy.
 
-## Installation
+## How to use this repository
 
-Install one or more skills by copying the folders into your Codex skills directory.
+There is no universal installation path across agent products.
 
-Project-local installation:
+Instead, use the repository in the way your agent environment expects reusable instructions to be provided:
 
-```bash
-cp -R gigachat-navigation /path/to/project/.codex/skills/
-cp -R gigachat-setup /path/to/project/.codex/skills/
-```
+1. Copy one or more skill folders into the place where your agent loads project or team skills.
+2. If your tool does not support native skill folders, adapt the contents of `SKILL.md` and `references/` into that tool's project instruction mechanism.
+3. Keep each skill folder intact so the workflow guidance and references stay together.
 
-User-level installation:
+## Adapting to different agent tools
 
-```bash
-cp -R gigachat-navigation ~/.codex/skills/
-cp -R gigachat-setup ~/.codex/skills/
-```
+Typical patterns across modern coding agents include:
 
-You can also copy the whole repository contents into a skills directory if you want all of them available.
+- repository-level instruction files
+- reusable skill or module folders
+- custom modes with tool selection and long-form instructions
+- team-level shared prompts or agent bundles
+
+This repository maps best to tools that support reusable instruction folders directly. For tools that do not, the content is still usable as a structured source of project guidance.
+
+## Confidence labels
+
+The skills use three confidence labels:
+
+- `verified`: safe default behavior
+- `docs/code-backed`: supported by documentation or implementation details, but not treated as the strongest default
+- `inference`: useful recommendation, but not a hard guarantee
+
+## Important cross-skill rule
+
+For GigaChat file workflows, keep one request limited to one file modality.
+
+Allowed:
+
+- image + image
+- audio + audio
+- document + document
+
+Avoid:
+
+- image + audio
+- image + pdf
+- audio + pdf
+
+If a user task spans multiple modalities, split the work into separate requests and combine results in application code.
 
 ## Notes
 
-- The skills use `verified`, `docs/code-backed`, and `inference` labels to communicate confidence.
-- The file-modality rule is important across the set: keep one request limited to one file modality.
 - `gpt2giga` is documented as a compatibility layer, not as a byte-for-byte replacement for OpenAI or Anthropic APIs.
+- `langchain-gigachat` is for LangChain-native workflows; use the native SDK skills when LangChain is not needed.
+- `gigachat-setup` should usually come before implementation-specific skills.
