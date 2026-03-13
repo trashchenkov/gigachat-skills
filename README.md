@@ -1,6 +1,6 @@
 # GigaChat Skills
 
-Portable skill folders for AI coding agents that need to write code against GigaChat and the GigaChain set of solutions.
+Portable skill folders for AI coding agents that need to write code against the GigaChat API and the GigaChain set of solutions.
 
 This repository is intentionally tool-agnostic. Different agent products expose reusable instructions in different ways:
 
