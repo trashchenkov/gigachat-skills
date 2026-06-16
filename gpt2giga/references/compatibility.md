@@ -6,68 +6,88 @@ Use this file when preserving an OpenAI-style or Anthropic-style client matters 
 
 Treat `gpt2giga` as a compatibility layer, not as a byte-for-byte replacement for OpenAI or Anthropic behavior.
 
-Status: `verified`
+Status: `source-backed`
 
-## Verified client paths
+## Stable API families
 
-- OpenAI-style chat through the proxy
-- Anthropic-style chat through the proxy
-- embeddings through the proxy
-- tool selection through the OpenAI-style API
+Current stable documentation describes support for:
 
-Status: `verified`
+- OpenAI-compatible `GET /models`
+- OpenAI-compatible `POST /chat/completions`
+- OpenAI-compatible `POST /responses`
+- OpenAI-compatible `POST /embeddings`
+- Anthropic-compatible `POST /messages`
+- Anthropic-compatible `POST /messages/count_tokens`
+- LiteLLM-compatible `GET /model/info`
+- system endpoints such as `/health` and `/ping`
 
-## Exposed API families
+Status: `source-backed`
 
-- OpenAI-style `/v1/chat/completions`
-- OpenAI-style `/v1/embeddings`
-- OpenAI-style `/v1/responses`
-- Anthropic-style `/v1/messages`
+## Disabled or out-of-scope APIs
 
-Status: `docs/code-backed`
+Stable docs describe Files and Batches routes as disabled until the required GigaChat SDK/backend support is available end-to-end.
+
+Not a project goal:
+
+- full OpenAI parity for audio, image generation/editing, fine-tuning, assistants, threads, runs, vector stores, uploads, moderations, or realtime
+- full Anthropic parity for Files beta, Skills beta, Agents beta, Sessions, Environments, or Admin API
+
+Status: `source-backed caution`
 
 ## Important mapping behavior
 
-- client payloads are transformed into GigaChat chat or embeddings requests
-- responses are transformed back into the source API shape
-- tool or function metadata may be mapped rather than preserved byte-for-byte
-- streaming is exposed as SSE where appropriate
-- some tool names may be remapped internally
-- tools without JSON parameters may be skipped
+- client payloads are transformed into normalized internal messages and then into GigaChat requests
+- tool/function schemas are mapped into GigaChat-compatible structures
+- structured output is supported where it can be mapped safely
+- reasoning flags and unsupported optional parameters may be accepted, mapped, or safely ignored depending on route/support
+- transport headers, client API keys, cookies, and unsafe metadata are filtered before upstream calls
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Model handling
 
-If `GPT2GIGA_PASS_MODEL=True`, the proxy forwards the client model name to GigaChat logic. Otherwise, the proxy default model wins.
+When model pass-through is enabled or defaulted by the deployed config, client model names can affect GigaChat model selection. Otherwise, proxy configuration decides the upstream model. Always check the proxy configuration before assuming the client-side `model` field wins.
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
-## Typical client example
+## Typical OpenAI client example
 
 ```python
 from openai import OpenAI
 
-client = OpenAI(
-    base_url="http://localhost:8090/v1",
-    api_key="any",
+client = OpenAI(base_url="http://localhost:8090/v1", api_key="<GPT2GIGA_API_KEY>")
+
+response = client.chat.completions.create(
+    model="GigaChat-2-Max",
+    messages=[{"role": "user", "content": "Привет"}],
 )
+print(response.choices[0].message.content)
 ```
 
-Status: `verified`
+Status: `source-backed`
 
-## Anthropic compatibility notes
+## Typical Anthropic client example
 
-- `tool_use` and `tool_result` blocks are converted internally before reaching GigaChat
-- image content may be converted into OpenAI-style image payloads on the proxy side
-- finish reasons are mapped into Anthropic `stop_reason` values
+```python
+from anthropic import Anthropic
 
-Status: `docs/code-backed`
+client = Anthropic(base_url="http://localhost:8090", api_key="<GPT2GIGA_API_KEY>")
+
+response = client.messages.create(
+    model="GigaChat-2-Max",
+    max_tokens=256,
+    messages=[{"role": "user", "content": "Привет"}],
+)
+print(response.content[0].text)
+```
+
+Status: `source-backed`
 
 ## Practical rules
 
 - use `gpt2giga` only when preserving client compatibility is a real requirement
-- do not route new native Python apps through the proxy by default
-- assume outer orchestration still owns the full multi-step tool loop
+- explain mapping gaps instead of hiding them
+- do not route native GigaChat apps through the proxy by default
+- do not use `gpt2giga` for Deep Agents harness profiles; use `deepagents-gigachat`
 
-Status: `verified`
+Status: `source-backed`

@@ -18,6 +18,7 @@ Use this skill whenever the task starts with "how do I connect to GigaChat?".
 - Choosing the right `scope`
 - TLS certificates for the Russian Trusted Root CA
 - Base environment variables shared by `gigachat`, `langchain-gigachat`, and `gpt2giga`
+- Environment auto-discovery: standard clients use loaded `GIGACHAT_*` variables without requiring explicit constructor credentials
 - First-pass troubleshooting for auth, SSL, and rate-limit failures
 
 ## Workflow
@@ -27,7 +28,7 @@ Use this skill whenever the task starts with "how do I connect to GigaChat?".
 3. Confirm the account type and pick `GIGACHAT_API_PERS`, `GIGACHAT_API_B2B`, or `GIGACHAT_API_CORP`.
 4. Configure TLS verification correctly before suggesting `verify_ssl_certs=False`.
 5. Verify connectivity with `get_models()` or a minimal chat call before debugging application code.
-6. For SDK or proxy usage, prefer environment variables over hardcoded secrets.
+6. For SDK or proxy usage, prefer environment variables over hardcoded secrets; if env vars are loaded, show `GigaChat()` / `GigaChatEmbeddings()` without repeating credentials.
 7. If a request fails, classify it in this order: TLS, auth, scope, rate limit, then content policy.
 
 ## Read these references as needed
@@ -38,6 +39,7 @@ Use this skill whenever the task starts with "how do I connect to GigaChat?".
 ## Default output
 
 - prefer CA bundle setup over disabling TLS verification
+- do not pass credentials explicitly in starter code when standard `GIGACHAT_*` environment variables are already loaded
 - treat connectivity as solved only after a minimal code-level check succeeds
 - send the user to the implementation skill only after setup is known-good
 

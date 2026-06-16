@@ -10,7 +10,7 @@ Use this file for uploads, file-backed prompts, and multimodal requests in the n
 4. Keep one request limited to one modality.
 5. Download generated assets through the files API when needed.
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Main file operations
 
@@ -20,7 +20,7 @@ Status: `verified`
 - download file content
 - delete file
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Modality rule
 
@@ -40,23 +40,27 @@ Avoid:
 
 If the application needs multiple modalities, split the work into separate requests and combine results in application code.
 
-Status: `verified`
+Status: `smoke-covered`
 
-## Verified file-understanding scenarios
+## Smoke-covered file-context prerequisites
 
-- single image understanding
-- single audio understanding
-- single PDF understanding
-- multi-image comparison
+The lightweight verification scripts cover upload/file-ID prerequisites for:
 
-Status: `verified`
+- single image context
+- single audio context
+- single PDF context
+- multi-image comparison setup
+
+They are smoke checks, not a full semantic benchmark of model understanding. Treat deeper content-understanding claims as source-backed or live-test-specific unless a task runs stronger assertions.
+
+Status: `smoke-covered`
 
 ## Known unreliable scenarios
 
 - mixed modalities in one request
 - mixed modalities across turns
 
-Status: `verified`
+Status: `caution`
 
 ## Size limits
 
@@ -67,9 +71,9 @@ Local docs indicate:
 - text document: 40 MB
 - combined audio + image payloads: under 80 MB
 
-Treat these as documented limits, not as locally verified guarantees for every endpoint path.
+Treat these as documented limits, not as smoke-covered guarantees for every endpoint path.
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Decision rules
 
@@ -78,4 +82,4 @@ Status: `docs/code-backed`
 - delete transient files in long-running systems
 - multiple images in one request are acceptable for comparison tasks
 
-Status: `verified`
+Status: `smoke-covered`

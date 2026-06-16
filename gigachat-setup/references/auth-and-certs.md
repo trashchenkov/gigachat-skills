@@ -4,8 +4,8 @@ Use this file to get connectivity working before debugging application code.
 
 ## Confidence
 
-- `verified`: reflected in local environment usage and project setup patterns
-- `docs/code-backed`: supported by local docs or repository code, but not necessarily exercised in this workspace during this pass
+- `smoke-covered`: covered by a lightweight verification script where practical
+- `source-backed`: supported by upstream docs, package metadata, or source
 - `inference`: recommendation derived from repeated failure patterns
 
 ## Default path
@@ -16,14 +16,14 @@ Use this file to get connectivity working before debugging application code.
 4. Verify connectivity with `get_models()` or a minimal chat call.
 5. Only use `verify_ssl_certs=False` for explicitly local or temporary work.
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Core endpoints
 
 - OAuth token: `https://ngw.devices.sberbank.ru:9443/api/v2/oauth`
 - REST API base: `https://gigachat.devices.sberbank.ru/api/v1/`
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Authorization model
 
@@ -33,7 +33,7 @@ Status: `docs/code-backed`
 4. Use the returned `access_token` as `Authorization: Bearer <token>` for API calls.
 5. Token lifetime is 30 minutes.
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Scope selection
 
@@ -43,9 +43,22 @@ Status: `docs/code-backed`
 
 If scope does not match the account type, auth usually fails even if credentials are valid.
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Environment variables
+
+Standard GigaChat clients read their usual environment variables automatically when they are present. If credentials and settings are already loaded into the process environment, do not repeat them in code. Prefer:
+
+```python
+from gigachat import GigaChat
+
+with GigaChat() as client:
+    print(client.get_models())
+```
+
+over hardcoding credentials in constructors.
+
+Common variables:
 
 - `GIGACHAT_CREDENTIALS`
 - `GIGACHAT_SCOPE`
@@ -57,7 +70,9 @@ Status: `docs/code-backed`
 - `GIGACHAT_USER`
 - `GIGACHAT_PASSWORD`
 
-Status: `docs/code-backed`
+Pass explicit constructor arguments only when overriding environment defaults for a specific process or test.
+
+Status: `smoke-covered`
 
 ## Certificate rule
 
@@ -73,7 +88,7 @@ Fallback for development only:
 
 - `verify_ssl_certs=False`
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Minimal connectivity check
 
@@ -82,15 +97,21 @@ Use this as the first code-level check after env and cert setup.
 ```python
 from gigachat import GigaChat
 
-with GigaChat(
-    credentials="<base64_auth_key>",
-    scope="GIGACHAT_API_PERS",
-    ca_bundle_file="/path/to/russian_trusted_root_ca.pem",
-) as client:
+# Uses GIGACHAT_* environment variables when they are already loaded.
+with GigaChat() as client:
     print(client.get_models())
 ```
 
-Status: `docs/code-backed`
+If a test must override the environment explicitly, pass only the changed fields:
+
+```python
+from gigachat import GigaChat
+
+with GigaChat(scope="GIGACHAT_API_PERS") as client:
+    print(client.get_models())
+```
+
+Status: `smoke-covered`
 
 ## Next step
 

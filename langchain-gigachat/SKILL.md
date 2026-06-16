@@ -28,7 +28,7 @@ Use this skill when the user is building with LangChain abstractions, not raw `g
 4. Work with LangChain message objects, not raw GigaChat payloads, unless debugging conversion.
 5. For RAG, pair `GigaChatEmbeddings` with a vector store and keep retrieval logic in LangChain.
 6. Avoid double retries when LangChain and the SDK both retry.
-7. Prefer the simplest verified LangChain pattern before adding wrapper-specific complexity.
+7. Prefer the simplest smoke-covered LangChain pattern before adding wrapper-specific complexity.
 
 ## Read these references as needed
 

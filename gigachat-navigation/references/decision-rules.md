@@ -1,21 +1,22 @@
 # Decision Rules
 
-Use this file to choose the simplest verified path before writing code.
+Use this file to choose the simplest smoke-covered path before writing code.
 
 ## Confidence
 
-- `verified`: routing rules aligned with confirmed behavior
-- `docs/code-backed`: supported by repository code or docs, but not the default path for new code here
-- `inference`: cautious recommendation derived from verified behavior
+- `smoke-covered`: routing rule has a lightweight verification script where practical
+- `source-backed`: routing rule is supported by upstream docs, package metadata, or source
+- `inference`: cautious recommendation derived from evidence
 
 ## Default routing order
 
 1. If the user controls a Python app and does not need framework compatibility, use `gigachat`.
 2. If the app already uses LangChain primitives, use `langchain-gigachat`.
 3. If the client must keep an OpenAI-compatible or Anthropic-compatible SDK, use `gpt2giga`.
-4. If more than one layer could work, choose the simplest verified path.
+4. If the task is Deep Agents or `deepagents-code` harness behavior, use `deepagents-gigachat`.
+5. If more than one layer could work, choose the simplest smoke-covered or source-backed path.
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Choose by task shape
 
@@ -25,7 +26,7 @@ Status: `verified`
 - when you need explicit control over auth, retries, payloads, files, or function calling
 - when you want the clearest debugging path
 
-Status: `verified`
+Status: `smoke-covered`
 
 ### Use `langchain-gigachat`
 
@@ -33,7 +34,18 @@ Status: `verified`
 - when you need LangChain messages, runnables, tool binding, embeddings, or RAG
 - when wrapper-level abstractions matter more than raw SDK control
 
-Status: `verified`
+Status: `smoke-covered`
+
+### Use `deepagents-gigachat`
+
+Choose `deepagents-gigachat` when:
+
+- the app runs through Deep Agents or `deepagents-code`
+- the user asks about HarnessProfile, provider profiles, or model profile behavior
+- GigaChat-specific Deep Agents prompts, tool descriptions, or middleware matter
+- benchmark/profile caveats affect the implementation
+
+Status: `source-backed`
 
 ### Use `gpt2giga`
 
@@ -41,7 +53,7 @@ Status: `verified`
 - when migration cost matters more than native SDK control
 - when compatibility with tools like Cursor or Aider is the main requirement
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## File modality rule
 
@@ -61,13 +73,13 @@ Avoid:
 
 If the task needs multiple modalities, split it into separate requests and combine results in application code.
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Mixed-modality context rule
 
 Do not rely on mixed-modality carryover inside one dialogue.
 
-What is verified:
+What is smoke-covered:
 
 - single image works
 - single audio works
@@ -76,14 +88,15 @@ What is verified:
 - mixed modalities in one request are unreliable
 - mixed modalities across turns are unreliable
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Practical routing table
 
 - direct Python integration -> `gigachat-sdk-*`
 - LangChain RAG or LangChain agents -> `langchain-gigachat`
 - OpenAI-compatible or Anthropic-compatible client -> `gpt2giga`
+- Deep Agents / `deepagents-code` with GigaChat -> `deepagents-gigachat`
 - image comparison -> `gigachat-sdk-files-embeddings` or `langchain-gigachat`
 - image + audio in one user task -> split into separate requests
 
-Status: `verified`
+Status: `smoke-covered`

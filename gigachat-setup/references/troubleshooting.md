@@ -9,7 +9,7 @@ Use this order before changing business logic or prompt structure.
 3. Verify `get_models()` or a minimal chat call.
 4. Only then debug payload complexity, files, function calling, LangChain wrappers, or proxy behavior.
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## SSL errors
 
@@ -24,7 +24,7 @@ Check in this order:
 3. Is the process using the expected Python environment?
 4. Is the code relying on `verify_ssl_certs=True` without the CA present?
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Auth errors
 
@@ -35,7 +35,7 @@ Typical causes:
 - expired access token
 - malformed `Authorization` header
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## 429 and throughput issues
 
@@ -43,7 +43,7 @@ Status: `docs/code-backed`
 - business accounts have higher concurrency
 - use retries with backoff for transient overload
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Content-policy refusals
 

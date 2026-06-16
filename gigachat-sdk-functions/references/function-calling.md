@@ -10,23 +10,23 @@ Use this file when the model must select or call tools through the native SDK.
 4. If the model returns `finish_reason == "function_call"`, execute the tool in application code.
 5. Send a second request containing the original user message, the assistant function call, and the `function` result message.
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Function call modes
 
 - `"auto"`: model decides whether to call a function
 - `"none"`: forbid all function calls
-- `{"name": "function_name"}`: force a specific function
+- `{"name": "function_name"}`: force a specific function where supported
 
 Use `"auto"` unless the product flow requires a forced tool.
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Minimal custom function example
 
 ```python
 from gigachat import GigaChat
-from gigachat.models import Chat, Messages, MessagesRole, Function, FunctionParameters
+from gigachat.models import Chat, Function, FunctionParameters, Messages, MessagesRole
 
 weather_function = Function(
     name="get_weather",
@@ -59,7 +59,7 @@ with GigaChat() as client:
         print(choice.message.function_call.arguments)
 ```
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Returning tool results
 
@@ -69,9 +69,15 @@ After your code executes the function, send a second request with:
 2. the assistant message containing `function_call`
 3. a `function` role message containing the serialized result
 
-Do not expect the SDK or model to complete the multi-step loop for you.
+Do not expect the SDK or model to complete the multi-step loop for you. The outer application or agent runtime owns tool execution and result injection.
 
-Status: `verified`
+Status: `smoke-covered`
+
+## Forward-looking primary tools note
+
+Upstream README/docs mention a newer primary tool surface with names such as `ChatCompletionRequest`, `ChatMessage`, `ChatTool`, and `ChatFunctionSpecification`. A review against stable PyPI `gigachat==0.2.1` found those names are not exported there. Keep the stable `Chat` + `Function` examples until the installed SDK version exposes the primary tool models.
+
+Status: `source-backed caution`
 
 ## Built-in functions
 
@@ -82,7 +88,7 @@ Documented built-ins include:
 
 Built-ins may return file references rather than inline bytes. Download generated assets through the files API.
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Schema rules
 
@@ -91,7 +97,7 @@ Status: `docs/code-backed`
 - add strong descriptions to the function and each parameter
 - keep tool names stable and explicit
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Validation
 
@@ -99,4 +105,4 @@ When schema correctness is uncertain, use the validation endpoint instead of bla
 
 - `POST /functions/validate`
 
-Status: `docs/code-backed`
+Status: `source-backed`

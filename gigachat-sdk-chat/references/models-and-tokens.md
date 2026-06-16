@@ -4,8 +4,8 @@ Use this file for model choice, token counting, retries, and prompt-size decisio
 
 ## Confidence
 
-- `verified`: exercised locally in this workspace
-- `docs/code-backed`: supported by repository code or local docs
+- `smoke-covered`: covered by a lightweight verification script where practical
+- `source-backed`: supported by upstream docs, package metadata, or source
 - `inference`: heuristic, not a guaranteed platform rule
 
 ## Main generation models
@@ -19,7 +19,7 @@ Practical default:
 - start with `GigaChat-2`
 - move to `Pro` or `Max` when instruction quality matters more than latency
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Context-window guidance
 
@@ -29,7 +29,7 @@ Status: `docs/code-backed`
 
 Do not rely on rough character counts near the limit. Use `tokens_count(...)`.
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Token counting
 
@@ -41,7 +41,7 @@ with GigaChat(model="GigaChat-2-Max") as client:
     print(counts)
 ```
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Session caching
 
@@ -60,7 +60,7 @@ Useful response field:
 
 - `precached_prompt_tokens`
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Retries
 
@@ -77,7 +77,7 @@ Default rule:
 - retry 429 and 5xx with backoff
 - do not retry malformed schemas or bad auth
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Throughput and batching heuristics
 
@@ -96,4 +96,4 @@ Status: `inference`
 - `NotFoundError`
 - `ServerError`
 
-Status: `docs/code-backed`
+Status: `source-backed`

@@ -2,8 +2,8 @@
 name: gigachat-navigation
 description: >-
   Routes work across the GigaChat ecosystem: official gigachat SDK,
-  langchain-gigachat, and gpt2giga. Use when deciding which layer to choose,
-  how capabilities differ, which limitations are verified, and which skill or
+  langchain-gigachat, gpt2giga, and deepagents-gigachat. Use when deciding which layer to choose,
+  how capabilities differ, which limitations are smoke-covered or source-backed, and which skill or
   reference path to use next.
 ---
 
@@ -13,9 +13,9 @@ Use this skill first when the user is unsure which GigaChat integration layer fi
 
 ## What this skill covers
 
-- choosing between `gigachat`, `langchain-gigachat`, and `gpt2giga`
+- choosing between `gigachat`, `langchain-gigachat`, `gpt2giga`, and `deepagents-gigachat`
 - mapping user intent to the right skill
-- understanding verified capabilities and limitations
+- understanding smoke-covered capabilities and limitations
 - choosing the right implementation skill next
 
 ## Workflow
@@ -24,14 +24,15 @@ Use this skill first when the user is unsure which GigaChat integration layer fi
 2. If the user is writing a native Python integration, prefer `gigachat`.
 3. If the app already uses LangChain primitives, use `langchain-gigachat`.
 4. If the client must keep an OpenAI-compatible or Anthropic-compatible SDK, use `gpt2giga`.
-5. If more than one layer could work, choose the simplest locally verified path.
-6. For files, keep one request limited to one modality.
-7. Prefer the simplest verified path described in the relevant skill and references.
+5. If the app is a Deep Agents or `deepagents-code` harness using GigaChat, use `deepagents-gigachat`.
+6. If more than one layer could work, choose the simplest source-backed path.
+7. For files, keep one request limited to one modality.
+8. Prefer the simplest smoke-covered or source-backed path described in the relevant skill and references.
 
 ## Read these references as needed
 
 - For routing logic: `references/decision-rules.md`
-- For verified feature coverage: `references/feature-matrix.md`
+- For smoke-covered feature coverage: `references/feature-matrix.md`
 
 ## Default output
 

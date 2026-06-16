@@ -9,7 +9,7 @@ Use this file for direct SDK embeddings and retrieval-oriented indexing.
 3. Use the same model for query and document embeddings within one index.
 4. If the task is LangChain RAG, switch to `langchain-gigachat`.
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Main embeddings models
 
@@ -18,7 +18,7 @@ Status: `verified`
 - `EmbeddingsGigaR`
 - `GigaEmbeddings-3B-2025-09`
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Model choice rules
 
@@ -26,7 +26,7 @@ Status: `docs/code-backed`
 - use `Embeddings` when compatibility or simplicity matters more than retrieval quality
 - do not mix vectors from different embeddings models inside one vector store
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Minimal example
 
@@ -41,7 +41,7 @@ with GigaChat() as client:
     print(len(result.data[0].embedding))
 ```
 
-Status: `verified`
+Status: `smoke-covered`
 
 ## Practical guidance
 
@@ -49,7 +49,7 @@ Status: `verified`
 - batch texts instead of sending one request per short string
 - embeddings billing is separate from text generation
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Retrieval note
 

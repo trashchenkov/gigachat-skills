@@ -30,7 +30,7 @@ Use this skill for direct Python integration with `gigachat`.
 5. Use streaming for incremental UX.
 6. Use async only when concurrency is actually needed.
 7. Use `tokens_count` before large prompts or cost-sensitive operations.
-8. Prefer the simplest verified payload shape over inventing a more complex one.
+8. Prefer the simplest smoke-covered payload shape over inventing a more complex one.
 
 ## Read these references as needed
 

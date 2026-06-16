@@ -9,21 +9,21 @@ Use this file for LangChain-native embeddings and retrieval pipelines.
 3. Keep auth, certs, and connectivity concerns in setup/config.
 4. If the task is only direct embeddings, use `gigachat-sdk-files-embeddings` instead.
 
-Status: `verified`
+Status: `source-backed`
 
 ## Embeddings
 
 ```python
 from langchain_gigachat.embeddings import GigaChatEmbeddings
 
-embeddings = GigaChatEmbeddings(
-    credentials="YOUR_AUTHORIZATION_KEY",
-    model="EmbeddingsGigaR",
-    verify_ssl_certs=False,
-)
+# Credentials and TLS settings are read from standard GIGACHAT_* env vars
+# when they are already loaded.
+embeddings = GigaChatEmbeddings(model="EmbeddingsGigaR")
 ```
 
-Status: `verified`
+Pass explicit constructor arguments only when overriding the environment. Use `verify_ssl_certs=False` only for local/dev certificate troubleshooting.
+
+Status: `smoke-covered`
 
 ## Query and document embedding
 
@@ -31,15 +31,16 @@ Status: `verified`
 - `embed_query("...")`
 - async variants are available
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Wrapper behavior
 
 - the wrapper batches by cumulative character count and part count
 - sync and async methods are available
 - query-prefix behavior may be available for retrieval tuning
+- keep the same embeddings model for query and document vectors in one index
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## RAG sketch
 
@@ -52,12 +53,13 @@ store = Chroma.from_documents(docs, embedding=embeddings)
 results = store.similarity_search("cat")
 ```
 
-Status: `docs/code-backed`
+Status: `source-backed`
 
 ## Practical rules
 
 - use `EmbeddingsGigaR` by default for retrieval unless there is a reason not to
 - add query prefixes only when the retrieval setup benefits from them
 - do not move retrieval policy into the model layer
+- use Deep Agents profile guidance only when an actual Deep Agents harness is involved
 
-Status: `docs/code-backed`
+Status: `source-backed`

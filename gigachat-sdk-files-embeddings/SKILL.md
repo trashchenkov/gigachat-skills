@@ -27,7 +27,7 @@ Use this skill for storage and vector workflows in the official SDK.
 4. For generated images or 3D assets, fetch content through the files API.
 5. For retrieval, pick the embeddings model first, then batch requests sensibly.
 6. If the user is actually building LangChain RAG, switch to `langchain-gigachat`.
-7. Prefer the simplest verified single-file or embeddings pattern before expanding to more complex workflows.
+7. Prefer the simplest smoke-covered single-file or embeddings pattern before expanding to more complex workflows.
 
 ## Read these references as needed
 
@@ -37,5 +37,5 @@ Use this skill for storage and vector workflows in the official SDK.
 ## Default output
 
 - treat one-modality-per-request as a hard constraint
-- use verified single-file or multi-image patterns before suggesting broader multimodal behavior
+- use smoke-covered single-file or multi-image patterns before suggesting broader multimodal behavior
 - separate file lifecycle guidance from embeddings guidance
